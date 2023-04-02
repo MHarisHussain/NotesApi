@@ -2,28 +2,30 @@ const express = require("express");
 const mangoos = require("mongoose");
 const noteRouter = require("../routes/noteRoute");
 const userRouter = require("../routes/userRoute");
+const dotevn = require(dotevn);
+const cors = require("cors");
+
+dotevn.config();
 
 const app = express();
 
 app.use(express.json());
 
-app.use((req, res, next) =>{
-    console.log("HTTP Method - " + req.method + " , URL " + req.url);
-    next();
-});
+app.use(cors());
 
 app.use("/users", userRouter);
 app.use("/note", noteRouter);
 
 app.get("/", (req, res) => {
-    res.send("Hello");
+    res.send("Notes Api");
 });
 
+const PORT = process.env.PORT || 5000;
 
-mangoos.connect("mongodb+srv://admin:admin@cluster0.ptntfwo.mongodb.net/?retryWrites=true&w=majority")
+mangoos.connect(process.env.MONGO_URL)
 .then(()=>{
-    app.listen(5000, () => {
-        console.log("Server started on port no. 5000");
+    app.listen(PORT, () => {
+        console.log("Server started on port no. " + PORT);
     });
 })
 .catch((error)=>{
